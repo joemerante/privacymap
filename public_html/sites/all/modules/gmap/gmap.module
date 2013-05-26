@@ -267,7 +267,10 @@ function _gmap_base_js() {
     'type' => 'external',
     'weight' => 1,
   );
-  $ret['/' . variable_get('file_public_path', conf_path() . '/files') . '/js/gmap_markers.js'] = array(
+  // CHANGED PER https://drupal.org/node/1964624
+  // $ret['/' . variable_get('file_public_path', conf_path() . '/files') . '/js/gmap_markers.js'] = array(
+  $base = base_path();
+  $ret[$base . variable_get('file_public_path', conf_path() . '/files') . '/js/gmap_markers.js'] = array(
     'type' => 'external',
     'weight' => 4,
   );
