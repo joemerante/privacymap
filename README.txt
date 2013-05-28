@@ -1,3 +1,5 @@
+A work in progress to organize recent developments in privacy law using Drupal. Known issues and features can be found on the Issues page, the site can be found at http://joemerante.com/privacymap. Standard Drupal 7 README.txt file below.
+
 
 CONTENTS OF THIS FILE
 ---------------------
