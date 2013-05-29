@@ -5,7 +5,7 @@
  */
 
 .gmap-popup {
-
+  min-height: 65px;
 }
 
 .gmap-tooltip {
