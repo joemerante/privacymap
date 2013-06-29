@@ -1,4 +1,15 @@
-A work in progress to organize recent developments in privacy law using Drupal. Known issues and features can be found on the Issues page, the site can be found at http://joemerante.com/privacymap. Standard Drupal 7 README.txt file below.
+A work in progress to organize recent developments in privacy law using Drupal. Known issues and features can be found on the Issues page, the site can be found at http://joemerante.com/privacymap. 
+
+Some Installation Notes:
+* The standard Drupal .gitignore file is included, along with other working files I keep locally
+* The primary content type is called a Document. A Document must have a content type of Article, Case, Legislative Development or Statute. 
+* You'll need some knowledge of CCK (part of Drupal 7+ core, it's what allows you to define custom content types and fields) and Views to get things appearing correctly. I've included exports of the Views in the SAMPLE_VIEWS folder, which you can import in Views admin, or ../privacymap/admin/structure/views. 
+* I've also included the Document content type as a Feature in the SAMPLE_FEATURES folder - include and enable this as a module (it will probably just appear as a sub-module under the Views module https://drupal.org/node/580052) and the Document content type should generate itself and become available when you go to create new content. If you'd like an entire installation profile including the entire site, send me an email and I'll export the whole shebang as a Feature.
+* The tags are generated using the cctags module, then presenting in a block. 
+* The site uses the gmap module. There are some great tutorials and videos just a Google search away to get started with gmap, also consult the module page's documentation, of course! The module comes with support for U.S. states and other common scenarios out of the box. Import the sample Views I've provided, and you should be most of the way there. https://drupal.org/project/gmap
+
+
+Standard Drupal 7 README.txt file below.
 
 
 CONTENTS OF THIS FILE
