@@ -1,0 +1,96 @@
+$view = new view();
+$view->name = 'filters';
+$view->description = 'A page with a field to filter Documents by various criteria';
+$view->tag = 'default';
+$view->base_table = 'node';
+$view->human_name = 'Filters';
+$view->core = 7;
+$view->api_version = '3.0';
+$view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+/* Display: Master */
+$handler = $view->new_display('default', 'Master', 'default');
+$handler->display->display_options['title'] = 'United States Documents';
+$handler->display->display_options['use_more_always'] = FALSE;
+$handler->display->display_options['group_by'] = TRUE;
+$handler->display->display_options['access']['type'] = 'perm';
+$handler->display->display_options['cache']['type'] = 'none';
+$handler->display->display_options['query']['type'] = 'views_query';
+$handler->display->display_options['exposed_form']['type'] = 'basic';
+$handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
+$handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Clear Filters';
+$handler->display->display_options['exposed_form']['options']['expose_sort_order'] = FALSE;
+$handler->display->display_options['pager']['type'] = 'full';
+$handler->display->display_options['pager']['options']['items_per_page'] = '5';
+$handler->display->display_options['pager']['options']['offset'] = '0';
+$handler->display->display_options['pager']['options']['id'] = '0';
+$handler->display->display_options['pager']['options']['quantity'] = '9';
+$handler->display->display_options['style_plugin'] = 'default';
+$handler->display->display_options['row_plugin'] = 'node';
+/* Field: Content: Title */
+$handler->display->display_options['fields']['title']['id'] = 'title';
+$handler->display->display_options['fields']['title']['table'] = 'node';
+$handler->display->display_options['fields']['title']['field'] = 'title';
+$handler->display->display_options['fields']['title']['label'] = '';
+$handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+$handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+/* Sort criterion: COUNT(DISTINCT Content revision: Updated date) */
+$handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
+$handler->display->display_options['sorts']['timestamp']['table'] = 'node_revision';
+$handler->display->display_options['sorts']['timestamp']['field'] = 'timestamp';
+$handler->display->display_options['sorts']['timestamp']['group_type'] = 'count_distinct';
+$handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
+$handler->display->display_options['filter_groups']['operator'] = 'OR';
+$handler->display->display_options['filter_groups']['groups'] = array(
+  1 => 'AND',
+  2 => 'AND',
+);
+/* Filter criterion: Content: Published */
+$handler->display->display_options['filters']['status']['id'] = 'status';
+$handler->display->display_options['filters']['status']['table'] = 'node';
+$handler->display->display_options['filters']['status']['field'] = 'status';
+$handler->display->display_options['filters']['status']['value'] = 1;
+$handler->display->display_options['filters']['status']['group'] = 1;
+$handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+/* Filter criterion: Content: Type */
+$handler->display->display_options['filters']['type']['id'] = 'type';
+$handler->display->display_options['filters']['type']['table'] = 'node';
+$handler->display->display_options['filters']['type']['field'] = 'type';
+$handler->display->display_options['filters']['type']['value'] = array(
+  'document' => 'document',
+);
+$handler->display->display_options['filters']['type']['group'] = 1;
+/* Filter criterion: Location: Province */
+$handler->display->display_options['filters']['province']['id'] = 'province';
+$handler->display->display_options['filters']['province']['table'] = 'location';
+$handler->display->display_options['filters']['province']['field'] = 'province';
+$handler->display->display_options['filters']['province']['group'] = 1;
+$handler->display->display_options['filters']['province']['exposed'] = TRUE;
+$handler->display->display_options['filters']['province']['expose']['operator_id'] = 'province_op';
+$handler->display->display_options['filters']['province']['expose']['label'] = 'State';
+$handler->display->display_options['filters']['province']['expose']['description'] = 'Results include federal and/or nationwide issues.';
+$handler->display->display_options['filters']['province']['expose']['operator'] = 'province_op';
+$handler->display->display_options['filters']['province']['expose']['identifier'] = 'province';
+$handler->display->display_options['filters']['province']['expose']['remember_roles'] = array(
+  2 => '2',
+  1 => 0,
+  3 => 0,
+);
+/* Filter criterion: Content: Applies nationwide? (field_united_states) */
+$handler->display->display_options['filters']['field_united_states_value']['id'] = 'field_united_states_value';
+$handler->display->display_options['filters']['field_united_states_value']['table'] = 'field_data_field_united_states';
+$handler->display->display_options['filters']['field_united_states_value']['field'] = 'field_united_states_value';
+$handler->display->display_options['filters']['field_united_states_value']['value'] = array(
+  1 => '1',
+);
+$handler->display->display_options['filters']['field_united_states_value']['group'] = 2;
+
+/* Display: Page */
+$handler = $view->new_display('page', 'Page', 'page');
+$handler->display->display_options['path'] = 'filters';
+$handler->display->display_options['menu']['type'] = 'normal';
+$handler->display->display_options['menu']['title'] = 'United States Documents';
+$handler->display->display_options['menu']['weight'] = '0';
+$handler->display->display_options['menu']['name'] = 'main-menu';
+$handler->display->display_options['menu']['context'] = 0;
+$handler->display->display_options['menu']['context_only_inline'] = 0;
