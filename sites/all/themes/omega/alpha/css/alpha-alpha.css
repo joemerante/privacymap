@@ -4,6 +4,10 @@ body{
   background-position: fixed;
 }
 
+#zone-menu {
+  padding-top: 95px;
+}
+
 /* Clearfix fix to prevent padding at bottom of page. FML */
 .clearfix:after {
   font-size: 0;
