@@ -1,3 +1,7 @@
+body{
+  background-image: url('../images/camera-tiles.jpg');
+}
+
 /* Clearfix fix to prevent padding at bottom of page. FML */
 .clearfix:after {
   font-size: 0;
