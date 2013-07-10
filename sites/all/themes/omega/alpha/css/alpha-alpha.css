@@ -1,5 +1,7 @@
 body{
-  background-image: url('../images/camera-tiles.jpg');
+  background-image: url('../images/single-camera.jpg');
+  background-repeat: no-repeat;
+  background-position: fixed;
 }
 
 /* Clearfix fix to prevent padding at bottom of page. FML */
