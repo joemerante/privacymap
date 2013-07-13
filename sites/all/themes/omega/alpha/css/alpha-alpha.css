@@ -75,3 +75,7 @@ img {
 .field-label-inline .field-item {
   display: inline;
 }
+
+.field-item a{
+  margin-right: 5px;
+}
