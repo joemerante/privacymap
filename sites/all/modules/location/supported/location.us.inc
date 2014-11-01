@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * United States.
+ */
+
+/**
  * Returns a lat/lon pair of the approximate center of the given postal code in the given country
  *
  * @param $location
@@ -22,10 +27,13 @@ function location_latlon_rough_us($location = array()) {
     return NULL;
   }
 
-  $row = db_query("SELECT latitude, longitude FROM {zipcodes} where country = :country AND zip = :zip", array(
-    ':country' => $location['country'],
-    ':zip' => substr(str_pad($location['postal_code'], 5, '0', STR_PAD_LEFT), 0, 5)
-  ))->fetchObject();
+  $row = db_query(
+    "SELECT latitude, longitude FROM {zipcodes} where country = :country AND zip = :zip",
+    array(
+      ':country' => $location['country'],
+      ':zip' => substr(str_pad($location['postal_code'], 5, '0', STR_PAD_LEFT), 0, 5)
+    )
+  )->fetchObject();
 
   if ($row) {
     return array('lat' => $row->latitude, 'lon' => $row->longitude);
@@ -60,10 +68,13 @@ function location_get_postalcode_data_us($location = array()) {
   }
 
   // Now we pad the thing and query.
-  $row = db_query("SELECT * FROM {zipcodes} where country = :country AND zip = :zip", array(
-    ':country' => $location['country'],
-    ':zip' => str_pad($location['postal_code'], 5, "0", STR_PAD_LEFT)
-  ))->fetchObject();
+  $row = db_query(
+    "SELECT * FROM {zipcodes} where country = :country AND zip = :zip",
+    array(
+      ':country' => $location['country'],
+      ':zip' => str_pad($location['postal_code'], 5, "0", STR_PAD_LEFT)
+    )
+  )->fetchObject();
   if ($row) {
     return array(
       'lat' => $row->latitude,
@@ -122,10 +133,14 @@ function _location_latlon_exact_us_geocoder($location = array()) {
     if (isset($location['postal_code'])) {
       $location_string = $location['street'] . ' ' . $location['postal_code'];
     }
-    elseif (isset($location['city']) && isset($location['province']) && trim($location['city']) != '' && trim($location['province'])) {
+    elseif (isset($location['city']) && isset($location['province']) && trim($location['city']) != '' && trim(
+        $location['province']
+      )
+    ) {
       $location_string = $location['street'] . ', ' . $location['city'] . ', ' . $location['province'];
     }
-    else { // else geocoder.us won't do bidness with you!
+    else {
+      // Else geocoder.us won't do bidness with you.
       return NULL;
     }
   }
@@ -135,9 +150,13 @@ function _location_latlon_exact_us_geocoder($location = array()) {
 
   $result = xmlrpc('http://rpc.geocoder.us/service/xmlrpc', array('geocode' => array($location_string)));
 
-  if (is_array($result) && is_array($result[0]) && isset($result[0]['lat']) && is_numeric($result[0]['lat']) && isset($result[0]['long']) && is_numeric($result[0]['long'])) {
+  if (is_array($result) && is_array($result[0]) && isset($result[0]['lat']) && is_numeric(
+      $result[0]['lat']
+    ) && isset($result[0]['long']) && is_numeric($result[0]['long'])
+  ) {
     return array('lat' => $result[0]['lat'], 'lon' => $result[0]['long']);
   }
+
   return NULL;
 }
 
@@ -151,6 +170,7 @@ function location_map_link_us_yahoo($location = array()) {
     $get_query .= 'csz=' . _location_us_yahoo_csz_get_field($location) . '&amp;';
   }
   $get_query .= 'country=' . urlencode($location['country']);
+
   return ('http://maps.yahoo.com/maps_result' . $get_query);
 }
 
@@ -272,17 +292,23 @@ function location_geocode_us_yahoo_settings() {
     '#size' => 64,
     '#maxlength' => 128,
     '#default_value' => variable_get('location_geocode_us_yahoo_appid', 'YahooDemo'),
-    '#description' => t('Unless you are using this site to test and develop, you will need to obtain a Yahoo! Web Services Application ID from the %network_link.  If you are using for development and testing purposes, you can use \'YahooDemo\' as your AppID.  When getting an Application ID from Yahoo!, please also be sure to review the %usage_policy.', array(
-      '%network_link' => '<a href="http://api.search.yahoo.com/webservices/register_application">Yahoo! Developer Network</a>',
-      '%usage_policy' => '<a href="http://developer.yahoo.com/usagePolicy/index.html">usage policy</a>'
-    ))
+    '#description' => t(
+      'Unless you are using this site to test and develop, you will need to obtain a Yahoo! Web Services Application ID from the %network_link.  If you are using for development and testing purposes, you can use \'YahooDemo\' as your AppID.  When getting an Application ID from Yahoo!, be sure to review the %usage_policy.',
+      array(
+        '%network_link' => '<a href="http://api.search.yahoo.com/webservices/register_application">Yahoo! Developer Network</a>',
+        '%usage_policy' => '<a href="http://developer.yahoo.com/usagePolicy/index.html">usage policy</a>'
+      )
+    )
   );
 
   return $form;
 }
 
 function location_geocode_us_yahoo($location = array()) {
-  $service_url = "http://api.local.yahoo.com/MapsService/V1/geocode?appid=" . variable_get('location_geocode_us_yahoo_appid', "YahooDemo") . "&location=";
+  $service_url = "http://api.local.yahoo.com/MapsService/V1/geocode?appid=" . variable_get(
+      'location_geocode_us_yahoo_appid',
+      "YahooDemo"
+    ) . "&location=";
 
   $address = location_address2singleline($location);
 
@@ -451,6 +477,7 @@ function _location_us_yahoo_csz_get_field($location) {
       return urlencode($location['province']);
     }
   }
+
   return '';
 }
 
@@ -498,68 +525,68 @@ function _location_us_geocoder_oneline($location = array()) {
  */
 function location_province_list_us() {
   return array(
-    'AL' => 'Alabama',
-    'AK' => 'Alaska',
-    'AZ' => 'Arizona',
-    'AR' => 'Arkansas',
-    'CA' => 'California',
-    'CO' => 'Colorado',
-    'CT' => 'Connecticut',
-    'DE' => 'Delaware',
-    'DC' => 'District Of Columbia',
-    'FL' => 'Florida',
-    'GA' => 'Georgia',
-    'HI' => 'Hawaii',
-    'ID' => 'Idaho',
-    'IL' => 'Illinois',
-    'IN' => 'Indiana',
-    'IA' => 'Iowa',
-    'KS' => 'Kansas',
-    'KY' => 'Kentucky',
-    'LA' => 'Louisiana',
-    'ME' => 'Maine',
-    'MD' => 'Maryland',
-    'MA' => 'Massachusetts',
-    'MI' => 'Michigan',
-    'MN' => 'Minnesota',
-    'MS' => 'Mississippi',
-    'MO' => 'Missouri',
-    'MT' => 'Montana',
-    'NE' => 'Nebraska',
-    'NV' => 'Nevada',
-    'NH' => 'New Hampshire',
-    'NJ' => 'New Jersey',
-    'NM' => 'New Mexico',
-    'NY' => 'New York',
-    'NC' => 'North Carolina',
-    'ND' => 'North Dakota',
-    'OH' => 'Ohio',
-    'OK' => 'Oklahoma',
-    'OR' => 'Oregon',
-    'PA' => 'Pennsylvania',
-    'RI' => 'Rhode Island',
-    'SC' => 'South Carolina',
-    'SD' => 'South Dakota',
-    'TN' => 'Tennessee',
-    'TX' => 'Texas',
-    'UT' => 'Utah',
-    'VT' => 'Vermont',
-    'VA' => 'Virginia',
-    'WA' => 'Washington',
-    'WV' => 'West Virginia',
-    'WI' => 'Wisconsin',
-    'WY' => 'Wyoming',
-    'AS' => 'American Samoa',
-    'FM' => 'Federated States of Micronesia',
-    'GU' => 'Guam',
-    'MH' => 'Marshall Islands',
-    'MP' => 'Northern Mariana Islands',
-    'PW' => 'Palau',
-    'PR' => 'Puerto Rico',
-    'VI' => 'Virgin Islands',
-    'AA' => 'Armed Forces Americas',
-    'AE' => 'Armed Forces Europe',
-    'AP' => 'Armed Forces Pacific',
+    'AL' => t('Alabama'),
+    'AK' => t('Alaska'),
+    'AZ' => t('Arizona'),
+    'AR' => t('Arkansas'),
+    'CA' => t('California'),
+    'CO' => t('Colorado'),
+    'CT' => t('Connecticut'),
+    'DE' => t('Delaware'),
+    'DC' => t('District Of Columbia'),
+    'FL' => t('Florida'),
+    'GA' => t('Georgia'),
+    'HI' => t('Hawaii'),
+    'ID' => t('Idaho'),
+    'IL' => t('Illinois'),
+    'IN' => t('Indiana'),
+    'IA' => t('Iowa'),
+    'KS' => t('Kansas'),
+    'KY' => t('Kentucky'),
+    'LA' => t('Louisiana'),
+    'ME' => t('Maine'),
+    'MD' => t('Maryland'),
+    'MA' => t('Massachusetts'),
+    'MI' => t('Michigan'),
+    'MN' => t('Minnesota'),
+    'MS' => t('Mississippi'),
+    'MO' => t('Missouri'),
+    'MT' => t('Montana'),
+    'NE' => t('Nebraska'),
+    'NV' => t('Nevada'),
+    'NH' => t('New Hampshire'),
+    'NJ' => t('New Jersey'),
+    'NM' => t('New Mexico'),
+    'NY' => t('New York'),
+    'NC' => t('North Carolina'),
+    'ND' => t('North Dakota'),
+    'OH' => t('Ohio'),
+    'OK' => t('Oklahoma'),
+    'OR' => t('Oregon'),
+    'PA' => t('Pennsylvania'),
+    'RI' => t('Rhode Island'),
+    'SC' => t('South Carolina'),
+    'SD' => t('South Dakota'),
+    'TN' => t('Tennessee'),
+    'TX' => t('Texas'),
+    'UT' => t('Utah'),
+    'VT' => t('Vermont'),
+    'VA' => t('Virginia'),
+    'WA' => t('Washington'),
+    'WV' => t('West Virginia'),
+    'WI' => t('Wisconsin'),
+    'WY' => t('Wyoming'),
+    'AS' => t('American Samoa'),
+    'FM' => t('Federated States of Micronesia'),
+    'GU' => t('Guam'),
+    'MH' => t('Marshall Islands'),
+    'MP' => t('Northern Mariana Islands'),
+    'PW' => t('Palau'),
+    'PR' => t('Puerto Rico'),
+    'VI' => t('Virgin Islands'),
+    'AA' => t('Armed Forces Americas'),
+    'AE' => t('Armed Forces Europe'),
+    'AP' => t('Armed Forces Pacific'),
   );
 }
 
@@ -580,65 +607,65 @@ function location_province_list_us() {
  */
 function location_province_list_numeric_us() {
   return array(
-    '001' => 'Alabama',
-    '002' => 'Alaska',
-    '003' => 'Arizona',
-    '004' => 'Arkansas',
-    '005' => 'California',
-    '006' => 'Colorado',
-    '007' => 'Connecticut',
-    '008' => 'Delaware',
-    '009' => 'District Of Columbia',
-    '010' => 'Florida',
-    '011' => 'Georgia',
-    '012' => 'Hawaii',
-    '013' => 'Idaho',
-    '014' => 'Illinois',
-    '015' => 'Indiana',
-    '016' => 'Iowa',
-    '017' => 'Kansas',
-    '018' => 'Kentucky',
-    '019' => 'Louisiana',
-    '020' => 'Maine',
-    '021' => 'Maryland',
-    '022' => 'Massachusetts',
-    '023' => 'Michigan',
-    '024' => 'Minnesota',
-    '025' => 'Mississippi',
-    '026' => 'Missouri',
-    '027' => 'Montana',
-    '028' => 'Nebraska',
-    '029' => 'Nevada',
-    '030' => 'New Hampshire',
-    '031' => 'New Jersey',
-    '032' => 'New Mexico',
-    '033' => 'New York',
-    '034' => 'North Carolina',
-    '035' => 'North Dakota',
-    '036' => 'Ohio',
-    '037' => 'Oklahoma',
-    '038' => 'Oregon',
-    '039' => 'Pennsylvania',
-    '040' => 'Rhode Island',
-    '041' => 'South Carolina',
-    '042' => 'South Dakota',
-    '043' => 'Tennessee',
-    '044' => 'Texas',
-    '045' => 'Utah',
-    '046' => 'Vermont',
-    '047' => 'Virginia',
-    '048' => 'Washington',
-    '049' => 'West Virginia',
-    '050' => 'Wisconsin',
-    '051' => 'Wyoming',
-    '052' => 'American Samoa',
-    '053' => 'Federated States of Micronesia',
-    '054' => 'Guam',
-    '055' => 'Marshall Islands',
-    '056' => 'Northern Mariana Islands',
-    '057' => 'Palau',
-    '058' => 'Puerto Rico',
-    '059' => 'Virgin Islands'
+    '001' => t('Alabama'),
+    '002' => t('Alaska'),
+    '003' => t('Arizona'),
+    '004' => t('Arkansas'),
+    '005' => t('California'),
+    '006' => t('Colorado'),
+    '007' => t('Connecticut'),
+    '008' => t('Delaware'),
+    '009' => t('District Of Columbia'),
+    '010' => t('Florida'),
+    '011' => t('Georgia'),
+    '012' => t('Hawaii'),
+    '013' => t('Idaho'),
+    '014' => t('Illinois'),
+    '015' => t('Indiana'),
+    '016' => t('Iowa'),
+    '017' => t('Kansas'),
+    '018' => t('Kentucky'),
+    '019' => t('Louisiana'),
+    '020' => t('Maine'),
+    '021' => t('Maryland'),
+    '022' => t('Massachusetts'),
+    '023' => t('Michigan'),
+    '024' => t('Minnesota'),
+    '025' => t('Mississippi'),
+    '026' => t('Missouri'),
+    '027' => t('Montana'),
+    '028' => t('Nebraska'),
+    '029' => t('Nevada'),
+    '030' => t('New Hampshire'),
+    '031' => t('New Jersey'),
+    '032' => t('New Mexico'),
+    '033' => t('New York'),
+    '034' => t('North Carolina'),
+    '035' => t('North Dakota'),
+    '036' => t('Ohio'),
+    '037' => t('Oklahoma'),
+    '038' => t('Oregon'),
+    '039' => t('Pennsylvania'),
+    '040' => t('Rhode Island'),
+    '041' => t('South Carolina'),
+    '042' => t('South Dakota'),
+    '043' => t('Tennessee'),
+    '044' => t('Texas'),
+    '045' => t('Utah'),
+    '046' => t('Vermont'),
+    '047' => t('Virginia'),
+    '048' => t('Washington'),
+    '049' => t('West Virginia'),
+    '050' => t('Wisconsin'),
+    '051' => t('Wyoming'),
+    '052' => t('American Samoa'),
+    '053' => t('Federated States of Micronesia'),
+    '054' => t('Guam'),
+    '055' => t('Marshall Islands'),
+    '056' => t('Northern Mariana Islands'),
+    '057' => t('Palau'),
+    '058' => t('Puerto Rico'),
+    '059' => t('Virgin Islands')
   );
 }
 
